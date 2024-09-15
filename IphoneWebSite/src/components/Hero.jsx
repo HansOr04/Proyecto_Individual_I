@@ -1,11 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { heroVideo, smallHeroVideo } from '../utils'
 const Hero = () => {
-    useState[videoSrc, setvideoSrc] = useState(window.innerWidth < 760 ? smallHeroVideo : heroVideo)
+    const [videoSrc, setvideoSrc] = useState(window.innerWidth < 760 ? smallHeroVideo : heroVideo)
+    const handleVideoSrcSet = () => {
+        if (window.innerWidth < 760) {
+            setvideoSrc(smallHeroVideo)
+        } else {
+            setvideoSrc(heroVideo)
+        }
+    }
+
+    useEffect(()=>{
+        window.addEventListener('resize', handleVideoSrcSet);
+        return () => {
+            window.removeEventListener('resize', handleVideoSrcSet);
+        }
+    },[])
     useGSAP(() => {
-        gsap.to('#hero', { opacity: 1, delay: 1.5 })
+        gsap.to('#hero', { opacity: 1, delay: 2 })
+        gsap.to('#cta', { opacity: 1, y: -50, delay: 2 })
     }, [])
     return (
         <section className='w-full nav-height bg-black relative'>
@@ -17,6 +32,12 @@ const Hero = () => {
                     </video>
                 </div>
 
+            </div>
+            <div id='cta' className='flex flex-col items-center opacity-0 translate-y-20'>
+                <a href='#highlights' className='btn'>
+                    Buy
+                </a>
+                <p className='font-normal text-xl'> From  $199/month or $999</p>
             </div>
 
         </section>
